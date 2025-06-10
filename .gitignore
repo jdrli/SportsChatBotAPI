@@ -1,1 +1,55 @@
-venv
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.pdb
+*.egg-info/
+dist/
+build/
+
+# Django-specific
+db.sqlite3
+*.log
+*.pot
+*.pyc
+media/
+staticfiles/
+
+# Environment
+.env
+.venv/
+venv/
+ENV/
+env/
+.idea/
+.vscode/
+
+# macOS
+.DS_Store
+
+# Docker
+*.pid
+*.tar
+*.gz
+
+# Byte-compiled / cache
+*.coverage
+htmlcov/
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.mo
+
+# Migrations (optional)
+**/migrations/__pycache__/
+**/migrations/*.pyc
+
+# If you want to exclude initial migrations (optional)
+# **/migrations/*.py
+
+# Pytest
+.pytest_cache/
+>>>>>>> d573135 (add docker to the mix)
