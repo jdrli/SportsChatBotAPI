@@ -2,7 +2,8 @@ import requests
 from .models import PlayerStat
 
 def fetch_nba_stats():
-    url = "https://site.api.espn.com/apis/site/v2/sports/basketball/nba"
+    url = "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard"
+
     response = requests.get(url)
     response.raise_for_status()
     data = response.json()
