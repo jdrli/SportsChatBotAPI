@@ -1,7 +1,7 @@
 import scrapy
 
 
-class EspnspiderSpider(scrapy.Spider):
+class NBAPlayerSpider(scrapy.Spider):
     name = "espnSpider"
     allowed_domains = ["espn.com"]
     start_urls = ["https://espn.com"]
