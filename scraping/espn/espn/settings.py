@@ -9,8 +9,11 @@
 
 BOT_NAME = "espn"
 
-SPIDER_MODULES = ["espn.spiders"]
-NEWSPIDER_MODULE = "espn.spiders"
+SPIDER_MODULES = [
+   'espn.NBA.spiders',
+]
+NEWSPIDER_MODULE = 'espn'
+
 
 ADDONS = {}
 
@@ -62,9 +65,9 @@ DOWNLOADER_MIDDLEWARES = {
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-ITEM_PIPELINES = {
-   "espn.pipelines.EspnPipeline": 300,
-}
+# ITEM_PIPELINES = {
+#    "espn.pipelines.EspnPipeline": 300,
+# }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
