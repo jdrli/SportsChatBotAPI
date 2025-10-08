@@ -58,6 +58,7 @@ class BasketballStats(models.Model):
     blocks_per_game = models.FloatField(null=True, blank=True)
     turnovers_per_game = models.FloatField(null=True, blank=True)
     minutes_per_game = models.FloatField(null=True, blank=True)
+    is_demo_data = models.BooleanField(default=False)  # Flag for demo data
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
@@ -83,6 +84,7 @@ class FootballStats(models.Model):
     sacks = models.FloatField(null=True, blank=True)
     interceptions = models.IntegerField(null=True, blank=True)
     fumbles_recovered = models.IntegerField(null=True, blank=True)
+    is_demo_data = models.BooleanField(default=False)  # Flag for demo data
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
