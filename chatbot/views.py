@@ -30,16 +30,22 @@ class Llama2LLM:
             api_key = os.environ.get("OPENAI_API_KEY")  # Using OpenAI as placeholder
             
         if not api_key:
-            raise ImproperlyConfigured("API key is required for LLM")
-            
-        # In real implementation, this would connect to Meta's Llama 2
-        # For now, using OpenAI as a placeholder
-        self.llm = OpenAI(api_token=api_key)
+            # If no API key is provided, set to None and handle gracefully
+            self.llm = None
+            logger.warning("No LLM API key provided. Chatbot will respond with default messages.")
+        else:
+            # In real implementation, this would connect to Meta's Llama 2
+            # For now, using OpenAI as a placeholder
+            self.llm = OpenAI(api_token=api_key)
     
     def query(self, df, prompt):
         """
         Query the LLM with a DataFrame and prompt
         """
+        if self.llm is None:
+            # Return a default response when no API key is available
+            return f"Analysis requested: '{prompt}'. To get actual AI analysis, please configure an LLM API key."
+        
         try:
             smart_df = SmartDataframe(df, config={"llm": self.llm, "enable_cache": False})
             result = smart_df.chat(prompt)
@@ -134,12 +140,7 @@ def process_sports_query(query):
                 df = pd.DataFrame(data)
                 
                 # Initialize PandasAI with LLM
-                api_key = os.environ.get("OPENAI_API_KEY")
-                if not api_key:
-                    # For demo purposes, return a simple response if no API key
-                    return "I can analyze basketball statistics. Please provide your query about basketball data."
-                
-                llm_wrapper = Llama2LLM(api_key=api_key)
+                llm_wrapper = Llama2LLM()  # Will use environment variable or handle gracefully
                 result = llm_wrapper.query(df, query)
                 
                 return str(result) if result else "I couldn't process your request. Please try rephrasing."
@@ -175,12 +176,7 @@ def process_sports_query(query):
                 df = pd.DataFrame(data)
                 
                 # Initialize PandasAI with LLM
-                api_key = os.environ.get("OPENAI_API_KEY")
-                if not api_key:
-                    # For demo purposes, return a simple response if no API key
-                    return "I can analyze football statistics. Please provide your query about football data."
-                
-                llm_wrapper = Llama2LLM(api_key=api_key)
+                llm_wrapper = Llama2LLM()  # Will use environment variable or handle gracefully
                 result = llm_wrapper.query(df, query)
                 
                 return str(result) if result else "I couldn't process your request. Please try rephrasing."

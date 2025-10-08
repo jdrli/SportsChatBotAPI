@@ -34,7 +34,13 @@ An AI-powered sports statistics chatbot with automated data collection from NCAA
 
 3. The application will be available at `http://localhost:8000`
 
-4. To stop the services:
+4. To populate with sample data (recommended for out-of-the-box experience):
+   ```bash
+   # In another terminal, run:
+   docker-compose exec web python manage.py create_sample_data
+   ```
+
+5. To stop the services:
    ```bash
    docker-compose down
    ```
@@ -69,12 +75,17 @@ An AI-powered sports statistics chatbot with automated data collection from NCAA
    python manage.py migrate
    ```
 
-6. Start the development server:
+6. Create sample data for immediate functionality:
+   ```bash
+   python manage.py create_sample_data
+   ```
+
+7. Start the development server:
    ```bash
    python manage.py runserver
    ```
 
-7. The application will be available at `http://localhost:8000`
+8. The application will be available at `http://localhost:8000`
 
 ## 📡 API Endpoints
 
@@ -105,11 +116,14 @@ An AI-powered sports statistics chatbot with automated data collection from NCAA
 
 ### ETL Pipeline
 - **Data Extraction**: Automatically scrapes NCAA/USports statistics from official websites using Beautiful Soup for static content and Selenium for dynamic content
+  - *Note: May require additional setup and may not work with all sources due to anti-bot measures*
 - **Data Transformation**: Processes and cleans scraped data using Pandas, standardizing formats and handling missing values
 - **Data Loading**: Stores processed data into PostgreSQL database with SQLAlchemy ORM
 
 ### AI Chatbot
 - **Natural Language Queries**: Understands and responds to questions about sports statistics
+  - *Note: Full AI functionality requires an LLM API key (OpenAI by default)*
+  - *Without API key: Shows appropriate messages and can still analyze stored data using basic pandas operations*
 - **Data Analysis**: Performs analysis on sports data based on user queries
 - **Session Management**: Maintains conversation context across multiple requests
 - **Statistical Insights**: Provides meaningful analysis of player and team statistics
@@ -119,11 +133,13 @@ An AI-powered sports statistics chatbot with automated data collection from NCAA
 - **Trend Analysis**: Creates charts showing statistical trends over time
 - **Comparison Charts**: Visual comparison of player/team statistics
 - **Dynamic Images**: Returns base64-encoded visualization images via API
+- *All visualization features work out-of-the-box without external dependencies*
 
 ### Data Analysis
 - **Basketball Stats**: Points, rebounds, assists, field goal percentages, etc.
 - **Football Stats**: Passing yards, rushing yards, receiving yards, touchdowns, etc.
 - **Statistical Summary**: Averages, totals, and comparative analysis of sports data
+- *All data analysis works with stored data; scraping from external sources requires additional setup*
 
 ## 🛠️ Configuration
 
@@ -177,6 +193,22 @@ The system includes models for:
 - **ChatMessage**: Stores individual messages in a session
 - **ScrapingJob**: Tracks scraping job status
 - **ScrapedData**: Generic model for storing raw scraped data
+
+## 🚀 Out-of-the-Box Experience
+
+After cloning and setting up the project, you can immediately:
+- Access all visualization features (leaderboards, trend analysis, etc.)
+- Query the database using the API endpoints
+- Use the chatbot functionality (with basic responses without AI enhancement)
+- Run data analysis functions on sample data
+- Explore the pre-populated sample sports statistics
+
+To get started immediately with sample data, run:
+```bash
+python manage.py create_sample_data  # Creates demo basketball and football stats
+```
+
+For full AI functionality, configure an LLM API key as described in the Configuration section.
 
 ## 🚀 Deployment
 
