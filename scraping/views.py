@@ -8,7 +8,30 @@ from .ncaa_scraper import NCAAScraper
 from .data_loader import load_processed_data_to_db
 import threading
 import os
+import urllib.parse
 from django.conf import settings
+
+
+def get_database_url():
+    """
+    Helper function to construct database URL from Django settings
+    """
+    db_config = settings.DATABASES['default']
+    
+    if db_config['ENGINE'] == 'django.db.backends.postgresql':
+        return f"postgresql://{db_config['USER']}:{db_config['PASSWORD']}@{db_config['HOST']}:{db_config['PORT']}/{db_config['NAME']}"
+    elif db_config['ENGINE'] == 'django.db.backends.mysql':
+        return f"mysql://{db_config['USER']}:{db_config['PASSWORD']}@{db_config['HOST']}:{db_config['PORT']}/{db_config['NAME']}"
+    elif db_config['ENGINE'] == 'django.db.backends.sqlite3':
+        # For SQLAlchemy to work with SQLite, we need the full path
+        db_path = db_config['NAME']
+        if not os.path.isabs(db_path):
+            from django.conf import settings as django_settings
+            db_path = os.path.join(django_settings.BASE_DIR, db_path)
+        return f"sqlite:///{db_path}"
+    else:
+        # Default to SQLite
+        return "sqlite:///db.sqlite3"
 
 @api_view(['GET'])
 def run_scraper(request):
@@ -47,14 +70,8 @@ def execute_etl_process(job_id):
     try:
         job = ScrapingJob.objects.get(id=job_id)
         
-        # Initialize the ETL pipeline
-        db_url = "sqlite:///sports_data.db"  # Django's default database
-        if hasattr(settings, 'DATABASES') and 'default' in settings.DATABASES:
-            db_config = settings.DATABASES['default']
-            if db_config['ENGINE'] == 'django.db.backends.postgresql':
-                db_url = f"postgresql://{db_config['USER']}:{db_config['PASSWORD']}@{db_config['HOST']}:{db_config['PORT']}/{db_config['NAME']}"
-            elif db_config['ENGINE'] == 'django.db.backends.mysql':
-                db_url = f"mysql://{db_config['USER']}:{db_config['PASSWORD']}@{db_config['HOST']}:{db_config['PORT']}/{db_config['NAME']}"
+        # Initialize the ETL pipeline using Django's database connection
+        db_url = get_database_url()
         
         pipeline = SportsETLPipeline(db_url)
         
@@ -160,11 +177,7 @@ def execute_basketball_scraping(job_id):
         for category, df in basketball_stats.items():
             if not df.empty:
                 # Load basketball data
-                db_url = "sqlite:///sports_data.db"  # Django's default database
-                if hasattr(settings, 'DATABASES') and 'default' in settings.DATABASES:
-                    db_config = settings.DATABASES['default']
-                    if db_config['ENGINE'] == 'django.db.backends.postgresql':
-                        db_url = f"postgresql://{db_config['USER']}:{db_config['PASSWORD']}@{db_config['HOST']}:{db_config['PORT']}/{db_config['NAME']}"
+                db_url = get_database_url()
                 
                 load_processed_data_to_db(df, 'basketball_stats', db_url, season='2023')
                 total_records += len(df)
@@ -228,11 +241,7 @@ def execute_football_scraping(job_id):
         for category, df in football_stats.items():
             if not df.empty:
                 # Load football data
-                db_url = "sqlite:///sports_data.db"  # Django's default database
-                if hasattr(settings, 'DATABASES') and 'default' in settings.DATABASES:
-                    db_config = settings.DATABASES['default']
-                    if db_config['ENGINE'] == 'django.db.backends.postgresql':
-                        db_url = f"postgresql://{db_config['USER']}:{db_config['PASSWORD']}@{db_config['HOST']}:{db_config['PORT']}/{db_config['NAME']}"
+                db_url = get_database_url()
                 
                 load_processed_data_to_db(df, 'football_stats', db_url, season='2023')
                 total_records += len(df)
