@@ -210,6 +210,27 @@ python manage.py create_sample_data  # Creates demo basketball and football stat
 
 For full AI functionality, configure an LLM API key as described in the Configuration section.
 
+## 🏗️ Technical Architecture
+
+The system uses a layered architecture with:
+- **Data Layer**: Django ORM with PostgreSQL backend
+- **ETL Layer**: Beautiful Soup and Selenium for extraction, Pandas for transformation, SQLAlchemy for loading
+- **AI Layer**: PandasAI for data analysis with configurable LLM backends 
+- **API Layer**: Django REST Framework for RESTful endpoints
+- **Visualization Layer**: Matplotlib for chart generation
+- **Containerization**: Docker and Docker Compose for deployment
+
+## 🧩 Key Features Implemented
+
+- **Automated ETL Pipeline**: Scrapes NCAA/USports data with Beautiful Soup/Selenium, processes with Pandas, stores in PostgreSQL
+- **AI-Powered Chatbot**: Natural language interface for querying sports statistics
+- **Visualization Engine**: Dynamic chart generation for statistical analysis
+- **Comprehensive API**: RESTful endpoints for all system functionality
+- **Data Management**: Robust models for basketball, football, and other sports statistics
+- **Session Management**: Conversation tracking for persistent chat experiences
+- **Configuration Flexibility**: Environment-based configuration for different deployment scenarios
+- **Sample Data Generator**: Management command for instant out-of-the-box experience
+
 ## 🚀 Deployment
 
 For production deployment:
@@ -224,3 +245,66 @@ For production deployment:
 - If scraping fails, ensure Chrome is installed and chromedriver is available
 - If visualization fails, ensure matplotlib and required dependencies are installed
 - If chatbot fails, ensure OpenAI API key is set (or implement Llama 2 integration)
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## 🧠 Technical Challenges and Learnings
+
+### Major Technical Challenges:
+
+1. **LLM API Integration Complexity**: 
+   - PandasAI 2.x has significantly different API than version 1.x, requiring major refactoring
+   - LLMs require API keys which creates dependency issues for out-of-box functionality
+   - Had to implement graceful fallbacks when API keys aren't available
+
+2. **Database URL Configuration**:
+   - Multiple code locations were duplicating database URL construction logic
+   - Needed to centralize database connection logic in a reusable helper function
+   - Had to handle different database backends (SQLite, PostgreSQL, MySQL) dynamically
+
+3. **Django Model Structure Issues**:
+   - Found incorrectly nested models (League class nested inside PlayerStat class)
+   - Fixed improper indentation and model class organization
+   - Required creating new migrations to properly reflect structural changes
+
+4. **Dependency Management**:
+   - Pandas 1.5.3 is incompatible with NumPy 2.x, causing runtime errors
+   - Had to carefully manage version compatibility across the stack
+   - Ensured Selenium and Chrome compatibility for headless scraping
+
+5. **Environment Variable Handling**:
+   - DJANGO_SETTINGS_MODULE was incorrectly set in .env file causing startup errors
+   - Had to clean up environment variable loading and ensure proper Django configuration
+
+6. **Data Pipeline Architecture**:
+   - Creating a cohesive flow from web scraping to data processing to visualization
+   - Ensuring data integrity and proper error handling throughout the pipeline
+   - Managing threading and background tasks for scraping jobs
+
+### Key Learnings:
+
+1. **API Version Compatibility**: Always check library version compatibility before implementation. PandasAI 2.x introduced breaking changes that required significant refactoring.
+
+2. **Graceful Degradation**: Systems should function meaningfully even when optional components (like LLMs) are unavailable. Implemented fallback responses for missing API keys.
+
+3. **Code Reusability**: Duplicated logic (database URL construction) creates maintenance problems. Centralized common functions in helper methods.
+
+4. **Model Structure**: Proper Django model organization is critical for maintainability. Nested classes in Python Django models can cause unexpected behavior.
+
+5. **Environment Management**: Environment variables can override application settings in unexpected ways. Careful validation of .env files is important.
+
+6. **Data Pipeline Design**: ETL processes require careful consideration of data flow, error handling, and performance optimization.
+
+7. **Out-of-Box Experience**: Users expect systems to work immediately after setup. Creating sample data generators greatly improves usability.
+
+8. **Dependency Versioning**: Managing version compatibility across the Python ecosystem requires attention to avoid runtime errors.
+
+## 📄 License
+
+[Add your license information here]
