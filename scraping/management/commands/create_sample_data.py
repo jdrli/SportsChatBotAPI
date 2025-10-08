@@ -46,6 +46,27 @@ class Command(BaseCommand):
                 self.style.SUCCESS('Successfully created sample football data')
             )
 
+    def generate_unique_names(self, first_names, last_names, count):
+        """
+        Generate unique names by combining first and last names
+        Uses itertools.product to avoid infinite loops
+        """
+        import itertools
+        
+        # Generate all possible combinations to avoid infinite loops
+        all_combinations = list(itertools.product(first_names, last_names))
+        random.shuffle(all_combinations)
+        
+        # Take only as many as needed
+        selected_combinations = all_combinations[:count]
+        unique_names = []
+        
+        for i, (first, last) in enumerate(selected_combinations):
+            name = f"{first} {last} Demo {i+1}"
+            unique_names.append(name)
+        
+        return unique_names
+
     def create_sample_basketball_data(self):
         """Create sample basketball data for demonstration"""
         # Clear existing demo data to avoid duplicates
@@ -57,51 +78,42 @@ class Command(BaseCommand):
         last_names = ['James', 'Curry', 'Tatum', 'Butler', 'Antetokounmpo', 'Paul', 'Durant', 'Embiid', 'Doncic', 'Lillard']
         
         # Generate unique player names to avoid conflicts
-        used_names = set()
-        i = 0
+        player_names = self.generate_unique_names(first_names, last_names, 20)
         
-        while i < 20:  # Create 20 sample players
-            first_name = random.choice(first_names)
-            last_name = random.choice(last_names)
-            player_name = f"{first_name} {last_name} Demo {i+1}"  # Unique name with number
+        for i, player_name in enumerate(player_names):
+            team_name = random.choice(teams)
+            season = "2023"
             
-            # Check for uniqueness before adding
-            if player_name not in used_names:
-                used_names.add(player_name)
-                team_name = random.choice(teams)
-                season = "2023"
-                
-                # Generate realistic stats
-                games_played = random.randint(65, 82)
-                points_per_game = round(random.uniform(10.0, 30.0), 1)
-                field_goal_percentage = round(random.uniform(0.40, 0.55), 3)
-                three_point_percentage = round(random.uniform(0.30, 0.45), 3)
-                free_throw_percentage = round(random.uniform(0.70, 0.95), 3)
-                rebounds_per_game = round(random.uniform(4.0, 12.0), 1)
-                assists_per_game = round(random.uniform(3.0, 9.0), 1)
-                steals_per_game = round(random.uniform(0.5, 2.5), 1)
-                blocks_per_game = round(random.uniform(0.5, 3.0), 1)
-                turnovers_per_game = round(random.uniform(1.0, 4.0), 1)
-                minutes_per_game = round(random.uniform(25.0, 38.0), 1)
-                
-                BasketballStats.objects.create(
-                    player_name=player_name,
-                    team_name=team_name,
-                    season=season,
-                    games_played=games_played,
-                    points_per_game=points_per_game,
-                    field_goal_percentage=field_goal_percentage,
-                    three_point_percentage=three_point_percentage,
-                    free_throw_percentage=free_throw_percentage,
-                    rebounds_per_game=rebounds_per_game,
-                    assists_per_game=assists_per_game,
-                    steals_per_game=steals_per_game,
-                    blocks_per_game=blocks_per_game,
-                    turnovers_per_game=turnovers_per_game,
-                    minutes_per_game=minutes_per_game,
-                    is_demo_data=True  # Mark as demo data
-                )
-                i += 1
+            # Generate realistic stats
+            games_played = random.randint(65, 82)
+            points_per_game = round(random.uniform(10.0, 30.0), 1)
+            field_goal_percentage = round(random.uniform(0.40, 0.55), 3)
+            three_point_percentage = round(random.uniform(0.30, 0.45), 3)
+            free_throw_percentage = round(random.uniform(0.70, 0.95), 3)
+            rebounds_per_game = round(random.uniform(4.0, 12.0), 1)
+            assists_per_game = round(random.uniform(3.0, 9.0), 1)
+            steals_per_game = round(random.uniform(0.5, 2.5), 1)
+            blocks_per_game = round(random.uniform(0.5, 3.0), 1)
+            turnovers_per_game = round(random.uniform(1.0, 4.0), 1)
+            minutes_per_game = round(random.uniform(25.0, 38.0), 1)
+            
+            BasketballStats.objects.create(
+                player_name=player_name,
+                team_name=team_name,
+                season=season,
+                games_played=games_played,
+                points_per_game=points_per_game,
+                field_goal_percentage=field_goal_percentage,
+                three_point_percentage=three_point_percentage,
+                free_throw_percentage=free_throw_percentage,
+                rebounds_per_game=rebounds_per_game,
+                assists_per_game=assists_per_game,
+                steals_per_game=steals_per_game,
+                blocks_per_game=blocks_per_game,
+                turnovers_per_game=turnovers_per_game,
+                minutes_per_game=minutes_per_game,
+                is_demo_data=True  # Mark as demo data
+            )
 
     def create_sample_football_data(self):
         """Create sample football data for demonstration"""
@@ -115,94 +127,85 @@ class Command(BaseCommand):
         positions = ['QB', 'RB', 'WR', 'TE', 'FB']
         
         # Generate unique player names to avoid conflicts
-        used_names = set()
-        i = 0
+        player_names = self.generate_unique_names(first_names, last_names, 20)
         
-        while i < 20:  # Create 20 sample players
-            first_name = random.choice(first_names)
-            last_name = random.choice(last_names)
-            player_name = f"{first_name} {last_name} Demo {i+1}"  # Unique name with number
+        for i, player_name in enumerate(player_names):
+            team_name = random.choice(teams)
+            position = random.choice(positions)
+            season = "2023"
             
-            # Check for uniqueness before adding
-            if player_name not in used_names:
-                used_names.add(player_name)
-                team_name = random.choice(teams)
-                position = random.choice(positions)
-                season = "2023"
-                
-                # Generate realistic stats based on position
-                games_played = random.randint(10, 17)
-                
-                # Generate different stats based on position
-                if position == 'QB':
-                    # Quarterback stats
-                    passing_yards = random.randint(2000, 5000)
-                    passing_touchdowns = random.randint(20, 45)
-                    interceptions_thrown = random.randint(5, 15)
-                    rushing_yards = random.randint(100, 500)
-                    rushing_touchdowns = random.randint(0, 8)
-                    receiving_yards = 0
-                    receiving_touchdowns = 0
-                    total_tackles = random.randint(0, 3)
-                    sacks = round(random.uniform(0, 2), 1)
-                    interceptions = random.randint(0, 2)
-                    fumbles_recovered = random.randint(0, 2)
-                elif position == 'RB':
-                    # Running back stats
-                    passing_yards = 0
-                    passing_touchdowns = 0
-                    interceptions_thrown = 0
-                    rushing_yards = random.randint(800, 1800)
-                    rushing_touchdowns = random.randint(5, 18)
-                    receiving_yards = random.randint(100, 800)
-                    receiving_touchdowns = random.randint(1, 8)
-                    total_tackles = random.randint(0, 2)
-                    sacks = 0
-                    interceptions = 0
-                    fumbles_recovered = random.randint(0, 3)
-                elif position in ['WR', 'TE']:
-                    # Receiver stats
-                    passing_yards = 0
-                    passing_touchdowns = 0
-                    interceptions_thrown = 0
-                    rushing_yards = random.randint(0, 100)
-                    rushing_touchdowns = random.randint(0, 3)
-                    receiving_yards = random.randint(400, 1500)
-                    receiving_touchdowns = random.randint(2, 15)
-                    total_tackles = random.randint(0, 1)
-                    sacks = 0
-                    interceptions = 0
-                    fumbles_recovered = random.randint(0, 2)
-                else:  # FB or other
-                    passing_yards = random.randint(0, 50)
-                    passing_touchdowns = random.randint(0, 1)
-                    interceptions_thrown = random.randint(0, 1)
-                    rushing_yards = random.randint(50, 300)
-                    rushing_touchdowns = random.randint(1, 6)
-                    receiving_yards = random.randint(50, 400)
-                    receiving_touchdowns = random.randint(0, 5)
-                    total_tackles = random.randint(0, 2)
-                    sacks = round(random.uniform(0, 0.5), 1)
-                    interceptions = random.randint(0, 1)
-                    fumbles_recovered = random.randint(0, 2)
-                
-                FootballStats.objects.create(
-                    player_name=player_name,
-                    team_name=team_name,
-                    position=position,
-                    season=season,
-                    games_played=games_played,
-                    passing_yards=passing_yards,
-                    passing_touchdowns=passing_touchdowns,
-                    interceptions_thrown=interceptions_thrown,
-                    rushing_yards=rushing_yards,
-                    rushing_touchdowns=rushing_touchdowns,
-                    receiving_yards=receiving_yards,
-                    receiving_touchdowns=receiving_touchdowns,
-                    total_tackles=total_tackles,
-                    sacks=sacks,
-                    interceptions=interceptions,
-                    fumbles_recovered=fumbles_recovered,
-                    is_demo_data=True  # Mark as demo data
-                )
-                i += 1
+            # Generate realistic stats based on position
+            games_played = random.randint(10, 17)
+            
+            # Generate different stats based on position
+            if position == 'QB':
+                # Quarterback stats
+                passing_yards = random.randint(2000, 5000)
+                passing_touchdowns = random.randint(20, 45)
+                interceptions_thrown = random.randint(5, 15)
+                rushing_yards = random.randint(100, 500)
+                rushing_touchdowns = random.randint(0, 8)
+                receiving_yards = 0
+                receiving_touchdowns = 0
+                total_tackles = random.randint(0, 3)
+                sacks = round(random.uniform(0, 2), 1)
+                interceptions = random.randint(0, 2)
+                fumbles_recovered = random.randint(0, 2)
+            elif position == 'RB':
+                # Running back stats
+                passing_yards = 0
+                passing_touchdowns = 0
+                interceptions_thrown = 0
+                rushing_yards = random.randint(800, 1800)
+                rushing_touchdowns = random.randint(5, 18)
+                receiving_yards = random.randint(100, 800)
+                receiving_touchdowns = random.randint(1, 8)
+                total_tackles = random.randint(0, 2)
+                sacks = 0
+                interceptions = 0
+                fumbles_recovered = random.randint(0, 3)
+            elif position in ['WR', 'TE']:
+                # Receiver stats
+                passing_yards = 0
+                passing_touchdowns = 0
+                interceptions_thrown = 0
+                rushing_yards = random.randint(0, 100)
+                rushing_touchdowns = random.randint(0, 3)
+                receiving_yards = random.randint(400, 1500)
+                receiving_touchdowns = random.randint(2, 15)
+                total_tackles = random.randint(0, 1)
+                sacks = 0
+                interceptions = 0
+                fumbles_recovered = random.randint(0, 2)
+            else:  # FB or other
+                passing_yards = random.randint(0, 50)
+                passing_touchdowns = random.randint(0, 1)
+                interceptions_thrown = random.randint(0, 1)
+                rushing_yards = random.randint(50, 300)
+                rushing_touchdowns = random.randint(1, 6)
+                receiving_yards = random.randint(50, 400)
+                receiving_touchdowns = random.randint(0, 5)
+                total_tackles = random.randint(0, 2)
+                sacks = round(random.uniform(0, 0.5), 1)
+                interceptions = random.randint(0, 1)
+                fumbles_recovered = random.randint(0, 2)
+            
+            FootballStats.objects.create(
+                player_name=player_name,
+                team_name=team_name,
+                position=position,
+                season=season,
+                games_played=games_played,
+                passing_yards=passing_yards,
+                passing_touchdowns=passing_touchdowns,
+                interceptions_thrown=interceptions_thrown,
+                rushing_yards=rushing_yards,
+                rushing_touchdowns=rushing_touchdowns,
+                receiving_yards=receiving_yards,
+                receiving_touchdowns=receiving_touchdowns,
+                total_tackles=total_tackles,
+                sacks=sacks,
+                interceptions=interceptions,
+                fumbles_recovered=fumbles_recovered,
+                is_demo_data=True  # Mark as demo data
+            )
