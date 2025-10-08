@@ -305,6 +305,3 @@ For production deployment:
 
 8. **Dependency Versioning**: Managing version compatibility across the Python ecosystem requires attention to avoid runtime errors.
 
-## 📄 License
-
-[Add your license information here]
