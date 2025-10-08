@@ -29,3 +29,23 @@ class PlayerStat(models.Model):
 
     def __str__(self):
         return f"{self.player_name} - {self.team_name}"
+
+    class League(models.Model):
+        id = models.IntegerField(primary_key=True)
+        name = models.CharField(max_length=100)
+        abbreviation = models.CharField(max_length=10)
+
+        def __str__(self):
+            return self.name
+
+    class Meta:
+        verbose_name = "Player Stat"
+        verbose_name_plural = "Player Stats"
+        ordering = ['player_name']
+
+    def __str__(self):
+        return f"{self.player_name} ({self.team_name}) - {self.points} pts, {self.rebounds} reb, {self.assists} ast"    
+
+# Note: The PlayerStat model is designed to store player statistics.
+# You can extend it with more fields as needed, such as steals, blocks, etc.
+# Ensure to run migrations after modifying the models.  
